@@ -1,0 +1,23 @@
+单表的sql
+1、	select lo_custkey, sum(lo_revenue) from lineorder group by lo_custkey
+2、	select count(*) from lineorder
+3、	select LINEORDER.LO_ORDERDATE, sum(LINEORDER.LO_REVENUE) as sum_lo_revenue from lineorder where LINEORDER.LO_ORDERDATE > 19960105 and LINEORDER.LO_ORDERDATE < 19960305 group by LINEORDER.LO_ORDERDATE
+4、	select LINEORDER.LO_CUSTKEY, LINEORDER.LO_ORDERDATE, sum(LINEORDER.LO_REVENUE) as sum_lo_revenue from lineorder where LINEORDER.LO_ORDERDATE > 19960105 and LINEORDER.LO_ORDERDATE < 19960305 group by LINEORDER.LO_ORDERDATE, LINEORDER.LO_CUSTKEY having sum_lo_revenue > 55000000 order by sum_lo_revenue desc
+
+多表的sql:
+ 1、select sum(lo_revenue) as revenue
+      from lineorder
+      left join dates on lINEORDER.LO_COMMITDATE = DATES.D_DATEKEY AND lo_orderdate = d_datekey
+      where d_year = 1993
+      and lo_discount between 1 and 3
+      and lo_quantity < 25;
+      
+ 2、select sum(lo_revenue) as lo_revenue, d_year, p_brand
+      from lineorder
+      left join dates on lINEORDER.LO_COMMITDATE = DATES.D_DATEKEY AND lo_orderdate = d_datekey
+      left join part on lo_partkey = p_partkey
+      left join supplier on lo_suppkey = s_suppkey
+      where p_category = 'MFGR#12' and s_region = 'AMERICA' and lo_custkey < 20000
+      group by d_year, p_brand
+      order by d_year, p_brand;
+
